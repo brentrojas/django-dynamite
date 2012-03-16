@@ -53,4 +53,7 @@ def unregister(sender, entity, **kwargs):
 
 def admin_list_factory(model):
     fields = [f.name for f in model._meta.fields if not f.auto_created]
-    return type('EntityAdmin', (admin.ModelAdmin,), {'list_display' : fields,})
+    if 'name' in fields and 'slug' in fields:
+        return type('EntityAdmin', (admin.ModelAdmin,), {'list_display' : fields, 'prepopulated_fields' : {'slug' : ('name',)}})
+    else:
+        return type('EntityAdmin', (admin.ModelAdmin,), {'list_display' : fields,})
